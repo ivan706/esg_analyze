@@ -1,0 +1,27 @@
+# 应用设置
+app:
+  name: ESG数据收集脚本
+  version: 1.0.0
+
+# 上证设置
+SSE:
+  host: https://query.sse.com.cn/security/stock/queryCompanyBulletin.do
+  parameters:
+    jsonCallBack: jsonpCallback
+    isPagination: 'true'
+    productId: '{company_code}'
+    keyWord: 社会责任
+    securityType: 0101,120100,020100,020200,120200
+    reportType2: 
+    beginDate: '2020-01-01'
+    endDate: '2024-05-10'
+    reportType: ALL
+    pageSize: 25
+    pageCount: 50
+    pageNo: 1
+    beginPage: 1
+    cacheSize: 1
+    endPage: 5
+    _: 1715244932875
+  header:
+    referer: https://www.sse.com.cn/
