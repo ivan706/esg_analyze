@@ -15,7 +15,9 @@
 
 ### 3. 运行项目
 
+    需要用python3运行项目，运行以下命令即可
+
     ```bash
-    python shangzheng_esg.py
+    python scripts/sse.py
     ``` 
 

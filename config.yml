@@ -3,14 +3,13 @@ app:
   name: ESG数据收集脚本
   version: 1.0.0
 
-# 上证设置
 SSE:
   host: https://query.sse.com.cn/security/stock/queryCompanyBulletin.do
   parameters:
     jsonCallBack: jsonpCallback
     isPagination: 'true'
     productId: '{company_code}'
-    keyWord: 社会责任
+    keyWord: 社会
     securityType: 0101,120100,020100,020200,120200
     reportType2: 
     beginDate: '2020-01-01'
@@ -25,3 +24,53 @@ SSE:
     _: 1715244932875
   header:
     referer: https://www.sse.com.cn/
+
+SZSE:
+  host: 'https://www.szse.cn/api/disc/announcement/annList?random=0.19714569256207226'
+  header:
+    Accept: 'application/json, text/javascript, */*; q=0.01'
+    Content-Type: 'application/json'
+    Origin: 'https://www.szse.cn'
+    Referer: 'https://www.szse.cn/disclosure/listed/notice/index.html'
+  data:
+    seDate:
+      - '2020-01-01'
+      - '2024-05-09'
+    searchKey:
+      - '社会'
+    stock: '{company_code}'
+    channelCode:
+      - 'listedNotice_disc'
+    pageSize: 50
+    pageNum: 1
+
+BSE:
+  host: 'https://www.bse.cn/disclosureInfoController/companyAnnouncement.do?callback=jsonpCallback'
+  header:
+    Accept: 'text/javascript, application/javascript, application/ecmascript, application/x-ecmascript, */*; q=0.01'
+    Content-Type: 'application/x-www-form-urlencoded; charset=UTF-8'
+    Origin: 'https://www.bse.cn'
+    Referer: 'https://www.bse.cn/disclosure/announcement.html'
+    User-Agent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
+  data:
+    disclosureType[]:
+      - 5
+    companyCd: '{company_code}'
+    isNewThree: 1
+    startTime: '2022-01-01'
+    endTime: '2024-06-01'
+    keyword: '社会'
+    xxfcbj[]: 2
+    needFields[]:
+      - 'companyCd'
+      - 'companyName'
+      - 'disclosureTitle'
+      - 'disclosurePostTitle'
+      - 'destFilePath'
+      - 'publishDate'
+      - 'xxfcbj'
+      - 'destFilePath'
+      - 'fileExt'
+      - 'xxzrlx'
+    sortfield: 'xxssdq'
+    sorttype: 'asc'
