@@ -1,23 +1,54 @@
-## 运行说明
+## Introduction
 
-### 1. 下载项目
+#### Requirements
+Before running the project, make sure you have Python 3 and Pip 3 installed on your develop machine.
+
+* Python 3
+* Pip 3
+
+#### Download repository
     
-    ```bash
-    git clone 本项目
-    cd esg_analysis
-    ```
+```bash
+git clone 本项目
+cd esg_analysis
+```
 
-### 2. 安装依赖
+#### Installation virtualenv
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+To install virtualenv via pip run if you don't have it installed yet:
+```bash
+$ pip3 install virtualenv
+```
 
-### 3. 运行项目
+#### Usage
 
-    需要用python3运行项目，运行以下命令即可
+Creation of virtualenv:
+```bash
+$ virtualenv -p python3 venv
+```
 
-    ```bash
-    python scripts/sse.py
-    ``` 
+Activate the virtualenv:
+```bash
+$ source venv/bin/activate
+```
 
+#### Install requirements
+
+```bash
+pip install -r requirements.txt
+```
+
+#### Run the project
+
+In virtualenv, run the following command to get data from the API and save it to a CSV file:
+
+```bash
+python scripts/sse.py
+``` 
+
+#### Deactivate the virtualenv
+
+Deactivate the virtualenv if needed:
+```bash
+$ deactivate
+```
