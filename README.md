@@ -3,7 +3,7 @@
 ### 1. 下载项目
     
     ```bash
-    git clone
+    git clone 本项目
     cd esg_analysis
     ```
 
