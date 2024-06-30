@@ -13,7 +13,7 @@ SSE:
     securityType: 0101,120100,020100,020200,120200
     reportType2: 
     beginDate: '2020-01-01'
-    endDate: '2024-05-10'
+    endDate: '2024-06-30'
     reportType: ALL
     pageSize: 25
     pageCount: 50
@@ -35,7 +35,7 @@ SZSE:
   data:
     seDate:
       - '2020-01-01'
-      - '2024-05-09'
+      - '2024-06-30'
     searchKey:
       - '社会'
     stock: '{company_code}'
@@ -58,7 +58,7 @@ BSE:
     companyCd: '{company_code}'
     isNewThree: 1
     startTime: '2022-01-01'
-    endTime: '2024-06-01'
+    endTime: '2024-06-30'
     keyword: '社会'
     xxfcbj[]: 2
     needFields[]:
