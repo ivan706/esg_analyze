@@ -1,7 +1,7 @@
 # 应用设置
 app:
   name: ESG数据收集脚本
-  version: 1.0.0
+  version: 1.0.1
 
 SSE:
   host: https://query.sse.com.cn/security/stock/queryCompanyBulletin.do
@@ -12,8 +12,8 @@ SSE:
     keyWord: 社会
     securityType: 0101,120100,020100,020200,120200
     reportType2: 
-    beginDate: '2020-01-01'
-    endDate: '2024-06-30'
+    beginDate: '2024-01-01'
+    endDate: '2024-07-30'
     reportType: ALL
     pageSize: 25
     pageCount: 50
@@ -34,8 +34,8 @@ SZSE:
     Referer: 'https://www.szse.cn/disclosure/listed/notice/index.html'
   data:
     seDate:
-      - '2020-01-01'
-      - '2024-06-30'
+      - '2024-01-01'
+      - '2024-07-30'
     searchKey:
       - '社会'
     stock: '{company_code}'
@@ -57,8 +57,8 @@ BSE:
       - 5
     companyCd: '{company_code}'
     isNewThree: 1
-    startTime: '2022-01-01'
-    endTime: '2024-06-30'
+    startTime: '2024-01-01'
+    endTime: '2024-07-30'
     keyword: '社会'
     xxfcbj[]: 2
     needFields[]:
