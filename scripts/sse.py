@@ -126,7 +126,7 @@ if __name__ == '__main__':
     with open('listed_companies/sse.csv', 'r') as f:
         reader = csv.reader(f)
         _companies = [(int(row[0]), row[1]) for row in reader]
-    _companies = [(600000, '浦发银行')]
+    # _companies = [(600000, '浦发银行')]
     esgs = []
     
     for _company in _companies:
@@ -142,7 +142,7 @@ if __name__ == '__main__':
             esgs.extend([esg_data[0]])
         else:
             esgs.extend([{'SECURITY_CODE': _company[0], 'SECURITY_NAME': _company[1], 'TITLE': 'N/A', 'SSEDATE': 'N/A'}])
-        time.sleep(5)
+        time.sleep(1)
     
     write_esgs_to_file(esgs)
     

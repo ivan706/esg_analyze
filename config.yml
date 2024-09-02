@@ -12,8 +12,8 @@ SSE:
     keyWord: 社会
     securityType: 0101,120100,020100,020200,120200
     reportType2: 
-    beginDate: '2024-01-01'
-    endDate: '2024-07-30'
+    beginDate: '2024-07-31'
+    endDate: '2024-08-31'
     reportType: ALL
     pageSize: 25
     pageCount: 50

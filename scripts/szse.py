@@ -111,7 +111,7 @@ if __name__ == '__main__':
         reader = csv.reader(f)
         _companies = [(row[0], row[1]) for row in reader]
 
-    _companies = [('000001', '平安银行')]
+    _companies = [('300895', '平安银行')]
     esgs = []
     
     for _company in _companies:
