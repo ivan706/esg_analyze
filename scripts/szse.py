@@ -126,7 +126,7 @@ if __name__ == '__main__':
             esgs.extend([esg_data[0]])
         else:
             print(_company)
-            esgs.extend([{'secCode': [_company[0]], 'secName': [_company[1]], 'title': 'N/A', 'publishTime': 'N/A'}])
+            esgs.extend([{'secCode': [_company[0]], 'secName': [_company[1]], 'title': 'null', 'publishTime': 'null'}])
         time.sleep(1)
     
     write_esgs_to_file(esgs)

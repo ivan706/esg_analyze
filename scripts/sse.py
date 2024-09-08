@@ -141,7 +141,7 @@ if __name__ == '__main__':
         if len(esg_data) > 0:
             esgs.extend([esg_data[0]])
         else:
-            esgs.extend([{'SECURITY_CODE': _company[0], 'SECURITY_NAME': _company[1], 'TITLE': 'N/A', 'SSEDATE': 'N/A'}])
+            esgs.extend([{'SECURITY_CODE': _company[0], 'SECURITY_NAME': _company[1], 'TITLE': 'null', 'SSEDATE': 'null'}])
         time.sleep(1)
     
     write_esgs_to_file(esgs)
