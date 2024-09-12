@@ -4,6 +4,76 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>中国上市公司 ESG 统计</title>
+    <script src="https://unpkg.com/@antv/g2/dist/g2.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+        }
+        h1 {
+            text-align: center;
+        }
+        p {
+            text-align: center;
+            font-size: 18px;
+        }
+        .content {
+            width: 70%;
+        }
+        .row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .chart {
+            flex: 1;
+            margin: 0 10px;
+        }
+        .chart p {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .chart:first-child {
+            margin-left: 0;
+        }
+        .chart:last-child {
+            margin-right: 0;
+        }
+        .card {
+            flex: 1;
+            margin: 0 10px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            text-align: center;
+        }
+        .card h2 {
+            margin: 0;
+            font-size: 2em;
+            color: #333;
+        }
+        .card p {
+            margin: 10px 0 0;
+            color: #666;
+        }
+        #info_total{
+            color: black;
+            font-size: 36px;
+            font-weight: bold;
+        }
+        #info_published{
+            color: red;
+            font-size: 36px;
+            font-weight: bold;
+        }
+        #info_percent{
+            color: blue;
+            font-size: 24px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
     <div class="content">
@@ -11,6 +81,312 @@
         <div id="esg-data-container">
             <!-- ESG 数据将显示在这里 -->
         </div>
+        <!-- <div class="row">
+            <p>截止到2024年8月31日，中国三大交易所共 <span id="info_total"></span> 支股票，其中已经发布2023年ESG报告的公司有 <span id="info_published"></span> 家，占总数的 <span id="info_percent"></span></p>
+        </div> -->
+        <div class="row">
+            <div class="card">
+                <h2 id="info_total">0</h2>
+                <p>总股票数</p>
+            </div>
+            <div class="card">
+                <h2 id="info_published">0</h2>
+                <p>已发布ESG报告公司数</p>
+            </div>
+            <div class="card">
+                <h2 id="info_percent">0%</h2>
+                <p>发布比例</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="card">
+                <div id="bullet-chart" class="chart"></div>
+                <p>发布数据</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="card">
+                <div id="pie-chart-1" class="chart"></div>
+                <p>上海证券交易所</p>
+            </div>
+            <div class="card">
+                <div id="pie-chart-2" class="chart"></div>
+                <p>深圳证券交易所</p>
+            </div>
+            <div class="card">
+                <div id="pie-chart-3" class="chart"></div>
+                <p>北京证券交易所</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="card">
+                <div id="bubble-chart" class="chart"></div>
+                <p>发布时间统计</p>
+            </div>
+        </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('/esg_data')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`请求失败: ${response.status} ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const container = document.getElementById('esg-data-container');
+                    container.innerHTML = ''; // 清空容器
+
+                    // 遍历对象的键值对并显示在页面上
+                    analysisData = {}
+                    analysisDataByMonth = {}
+                    for (const [key, value] of Object.entries(data)) {
+                        analysisData[key] = analysis(value);
+                        analysisDataByMonth[key] = analysisDate(value);
+                        console.log(analysisDataByMonth[key]);
+                    }
+                    buildPieChart('pie-chart-1', analysisData['sse']);
+                    buildPieChart('pie-chart-2', analysisData['scse']);
+                    buildPieChart('pie-chart-3', analysisData['bse']);
+                    buildBubbleChart(analysisDataByMonth);
+                    bulletChart(analysisData);
+                })
+                .catch(error => {
+                    console.error('请求失败:', error);
+                });
+            // 数据统计方法，统计参数数据，返回数据的count，index[3]非空的数据个数
+            function analysis(data) {
+                let count = 0;
+                let index = 0;
+                for (let i = 0; i < data.length; i++) {
+                    if (data[i][3] !== '') {
+                        count++;
+                        index = i;
+                    }
+                }
+                return [count, index];
+            }
+            // 数据统计方法，统计传入数据，index[3]是日期，统计每个月份的数据个数，格式为[1月，个数],补足1月到8月,并按照月份排序
+            function analysisDate(data) {
+                let dateArray = {"1月":0,"2月":0,"3月":0,"4月":0,"5月":0,"6月":0,"7月":0,"8月":0};
+                for (let i = 0; i < data.length; i++) {
+                    if (data[i][3] !== '') {
+                        let date = new Date(data[i][3]);
+                        let month = date.getMonth() + 1 + "月";
+                        if (dateArray[month] === undefined) {
+                            dateArray[month] = 1;
+                        } else {
+                            dateArray[month]++;
+                        }
+                    }
+                }
+                // dataArray 转成数组
+                let result = [];
+                for (let key in dateArray) {
+                    result.push([key, dateArray[key]]);
+                }
+                return result;
+            }
+            // 数据转换方法，将 {dse:[["1月",0],["2月",0]]} 转换为 [{category:"dse",month:"1月",count:0}]
+            function transformData(data) {
+                const result = [];
+                for (const [category, months] of Object.entries(data)) {
+                    let translatedCategory = category;
+                    if(category == 'bse'){
+                        translatedCategory = '北京证券交易所';
+                    }else if(category == 'scse'){
+                        translatedCategory = '深圳证券交易所';
+                    }else if(category == 'sse'){
+                        translatedCategory = '上海证券交易所';
+                    }
+                    months.forEach(([month, count]) => {
+                        result.push({ 交易所: translatedCategory, 月份: month, 发布数量: count });
+                    });
+                }
+                return result;
+            }
+            // 子弹图
+            function bulletChart(_esg_data) {
+                const chart = new G2.Chart({
+                    container: 'bullet-chart',
+                    autoFit: true,
+                    height: 300,
+                });
+                let total = 0;
+                let published = 0;
+                for (const [key, value] of Object.entries(_esg_data)) {
+                    total += value[1];
+                    published += value[0];
+                }
+                document.getElementById('info_total').innerText = total;
+                document.getElementById('info_published').innerText = published;
+                document.getElementById('info_percent').innerText = (published/total).toFixed(3) * 100 + '%';
+                const data = [{
+                    title: '发布占比',
+                    ranges: total,
+                    measures: published,
+                    target: published,
+                }];
+                chart.coordinate({ transform: [{ type: 'transpose' }] });
+
+                chart.data(data);
+
+                chart
+                .interval()
+                .encode('x', 'title')
+                .encode('y', 'ranges')
+                .encode('color', '#f0efff')
+                .style('maxWidth', 30)
+                .axis({
+                    y: {
+                    grid: true,
+                    gridLineWidth: 2,
+                    },
+                    x: {
+                    title: false,
+                    },
+                });
+
+                chart
+                .interval()
+                .encode('x', 'title')
+                .encode('y', 'measures')
+                .encode('color', '#5B8FF9')
+                .style('maxWidth', 20)
+                .label({
+                    text: 'measures',
+                    position: 'right',
+                    textAlign: 'left',
+                    dx: 5,
+                });
+
+                chart
+                .point()
+                .encode('x', 'title')
+                .encode('y', 'target')
+                .encode('shape', 'line')
+                .encode('color', '#3D76DD')
+                .encode('size', 8)
+                .tooltip({
+                    title: false,
+                    items: [{ channel: 'y' }],
+                });
+
+                // chart.options({
+                //     type: "view",
+                //     data: data,
+                //     coordinate: { transform: [{ type: "transpose" }] },
+                //     children: [
+                //         {
+                //             type: "interval",
+                //             encode: { x: "title", y: "ranges", color: "#f0efff" },
+                //             style: { maxWidth: 30 },
+                //             axis: { y: { grid: true, gridLineWidth: 2 }, x: { title: false } },
+                //         },
+                //         {
+                //             type: "interval",
+                //             encode: { x: "title", y: "measures", color: "#5B8FF9" },
+                //             style: { maxWidth: 20 },
+                //             labels: [
+                //                 { text: "measures", position: "right", textAlign: "left", dx: 5 },
+                //             ],
+                //         },
+                //         {
+                //             type: "point",
+                //             encode: {
+                //                 x: "title",
+                //                 y: "target",
+                //                 shape: "line",
+                //                 color: "#3D76DD",
+                //                 size: 8,
+                //             },
+                //             tooltip: { title: false, items: [{ channel: "y" }] },
+                //         },
+                //     ],
+                // });
+
+                chart.render();
+            }
+            function buildPieChart(container, _esg_data) {
+                const percent = Math.floor((_esg_data[0] / _esg_data[1]).toFixed(3) * 100) + '%';
+                const chart = new G2.Chart({
+                    container,
+                    autoFit: true,
+                    height: 300,
+                });
+                const data = [{item:"已发布",count:_esg_data[0],percent:(_esg_data[0]/_esg_data[1]).toFixed(3)},{item:"未发布",count:_esg_data[1]-_esg_data[0],percent:1-(_esg_data[0]/_esg_data[1]).toFixed(3)+''}];
+                chart.coordinate({ type: 'theta', innerRadius: 0.35, outerRadius: 0.8 });
+
+                chart.interval()
+                    .data(data)
+                    .transform({ type: 'stackY' })
+                    .encode('y', 'count')
+                    .encode('color', 'item')
+                    .scale('color', {
+                        range: ['#f47560', '#e8c1a0'],
+                    })
+                    .label({
+                        text: 'count',
+                        fontWeight: 'bold',
+                        fontSize: 16,
+                        offset: 4,
+                    })
+                    
+                    .style('radius', 4)
+                    .style('stroke', '#fff')
+                    .style('lineWidth', 2)
+                    .animate('enter', { type: 'waveIn' })
+                    .legend('color', {
+                        /** 让图例在水平和垂直方向上保持居中 */
+                        layout: {
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        flexDirection: 'column',
+                        },
+                    });
+                
+                chart.text()
+                    .style('text', percent)
+                    .tooltip(false)
+                    // Relative position
+                    .style('x', '50%')
+                    .style('y', '50%')
+                    .style('fontSize', 16)
+                    .style('fill', '#8c8c8c')
+                    .style('textAlign', 'center');
+                chart.render();
+            }
+            // 气泡图
+            function buildBubbleChart(_esg_data){
+                const chart = new G2.Chart({
+                    container: 'bubble-chart',
+                    autoFit: true,
+                    height: 300,
+                });
+
+                chart
+                .point()
+                .data(transformData(_esg_data))
+                .encode('x', '月份')
+                .encode('y', '交易所')
+                .encode('size', '发布数量')
+                .encode('color', '交易所')
+                .encode('shape', 'point')
+                .tooltip('发布数量')
+                .scale('size', { rangeMax: 35 })
+                .legend(false)
+                .style({
+                    stroke: 'black',
+                    strokeOpacity: 0.1,
+                    opacity: 0.8,
+                    lineWidth: 1,
+                });
+
+                chart.render();
+            }
+        });
+    </script>
 </body>
 </html>
