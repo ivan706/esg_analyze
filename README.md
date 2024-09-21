@@ -38,14 +38,19 @@ $ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-#### Run the project
+#### Get data
 
-In virtualenv, run the following command to get data from the API and save it to a CSV file:
+In virtualenv, run the following command to get data through AJAX request and save it to a CSV file:
 
 ```bash
 python scripts/sse.py
 ``` 
 
+#### Start the server
+
+```bash
+flask --app app/esg run
+``` 
 #### Deactivate the virtualenv
 
 Deactivate the virtualenv if needed:
