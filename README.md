@@ -1,5 +1,9 @@
 ## Introduction
 
+This project is to research ESG (Environmental/Social/Governance) reports of the A-share public companies listed in the China stock market (Shanghai/Shenzhen/Beijing stock exchange). It crawed the annual reports of all public companies from the websites of Shanghai/Shenzhen/Beijing stock exchange. 
+
+We would like to see how many public companies in China have ESG in their annual report. We could further analyze relationship between stock prices performance and ESG of the company, etc. It will provide help for ESG investing.
+
 #### Requirements
 Before running the project, make sure you have Python 3 and Pip 3 installed on your develop machine.
 
